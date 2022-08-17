@@ -1,24 +1,21 @@
-import logo from './logo.svg';
-import './App.css';
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { Container } from 'react-bootstrap'
+
+import NavigationBar from './components/NavigationBar/NavigationBar'
+import AlertContent from './components/AlertContent/AlertContent'
+import DashboardContent from './components/DashboardContent'
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <BrowserRouter>
+      <NavigationBar />
+      <Container fluid style={{ padding: '16px 20px', backgroundColor: '#f8f8ff' }}>
+        <Routes>
+          <Route path="/" element={<DashboardContent />} />
+          <Route path="/alerts" element={<AlertContent />} />
+        </Routes>
+      </Container>
+    </BrowserRouter>
   );
 }
 

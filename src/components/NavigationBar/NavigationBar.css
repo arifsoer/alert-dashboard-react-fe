@@ -1,0 +1,26 @@
+.Navbar-bottom {
+  border-bottom: 1px solid #b5b7bc;
+}
+
+.navbar {
+  padding: 0;
+}
+
+.nav-link {
+  padding: 16px 0;
+}
+
+.nav-link.active {
+  background-color: #f0f5ff;
+  border-bottom: 3px solid #3478FC;
+}
+
+.Navbar-Link-Admin {
+  margin-left: 14px;
+  padding-left: 16px !important;
+  padding-top: 4px !important;
+  padding-bottom: 4px !important;
+  margin-top: 15px;
+  margin-bottom: 15px;
+  border-left: 1px solid #5F6368;
+}
