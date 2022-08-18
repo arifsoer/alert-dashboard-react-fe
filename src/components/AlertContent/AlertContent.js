@@ -29,6 +29,8 @@ const AlertContent = () => {
       if (Object.keys(selectedMachine).length === 0) {
         setSelectedMachine(resp.data[0])
       }
+      setSelectedId("")
+      setSelectedAlert({})
       getAlertsByMachine(resp.data[0].id)
     } catch (error) {
       alert(error);
