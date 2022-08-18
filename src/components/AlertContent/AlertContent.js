@@ -1,45 +1,79 @@
-import { useState} from 'react'
-import { Card, Col, Dropdown, Row, Button, Image, Badge } from 'react-bootstrap'
+/* eslint-disable react-hooks/exhaustive-deps */
+import { useState, useEffect } from "react";
+import {
+  Card,
+  Col,
+  Dropdown,
+  Row,
+  Button,
+  Image,
+  Badge,
+} from "react-bootstrap";
 
-import BackTriangle from '../../assets/svgs/back-triangle.svg'
+import axios from "../../plugins/axios";
 
-import AlertItem from './AlertItem'
-import AlertDetail from './AlertDetail'
+import BackTriangle from "../../assets/svgs/back-triangle.svg";
+
+import AlertItem from "./AlertItem";
+import AlertDetail from "./AlertDetail";
 
 const AlertContent = () => {
-  const [selectedId, setSelectedId] = useState('#00013211')
-
-  const alertDatas = [
-    {
-      id: '#00013211',
-      anomaly: 'Moderate',
-      detectionTime: 1628676001,
-      machine: 'CNC Machine',
-      reason: 'Unknown Anomally',
-      isAlreadyOpen: false
-    },
-    {
-      id: '#00013212',
-      anomaly: 'Moderate',
-      detectionTime: 1628676001,
-      machine: 'CNC Machine',
-      reason: 'Unknown Anomally',
-      isAlreadyOpen: true
+  
+  // machines module
+  const [machines, setMachines] = useState([]);
+  const [selectedMachine, setSelectedMachine] = useState({})
+  const getMachines = async () => {
+    try {
+      const resp = await axios.get("/alert/machines");
+      setMachines(resp.data);
+      if (Object.keys(selectedMachine).length === 0) {
+        setSelectedMachine(resp.data[0])
+      }
+      getAlertsByMachine(resp.data[0].id)
+    } catch (error) {
+      alert(error);
     }
-  ]
+  };
+  const machineSelectHandler = (key) => {
+    setSelectedMachine(machines[key])
+    getAlertsByMachine(machines[key].id)
+  }
+  useEffect(() => {getMachines()}, [])
 
-  const selectedAlert = alertDatas.find(ad => ad.id === selectedId)
+  // get alerts data
+  const [selectedId, setSelectedId] = useState("#00013211");
+  const [alerts, setAlerts] = useState([])
+  const getAlertsByMachine = async (machineId) => {
+    try {
+      const respAlerts = await axios.get(`/alert/anomalies/bymachine/${machineId}`)
+      setAlerts(respAlerts.data.map(dt => {
+        return {
+          id: dt.generatedId,
+          anomaly: dt.name,
+          detectionTime: dt.detectedAt,
+          machine: dt.machine.name,
+          reason: dt.reason.name,
+          isAlreadyOpen: dt.isAlreadyOpen,
+        }
+      }))
+    } catch (error) {
+      alert(error)
+    }
+  }
+
+  const selectedAlert = alerts.find((ad) => ad.id === selectedId);
 
   return (
     <Card>
-      <Card.Body style={{ borderBottom: '1px solid #b8babc', padding: '4px 14px' }}>
-        <Dropdown>
-          <Dropdown.Toggle variant="outline-dark">
-            CNC Machine
-          </Dropdown.Toggle>
+      <Card.Body
+        style={{ borderBottom: "1px solid #b8babc", padding: "4px 14px" }}
+      >
+        <Dropdown onSelect={machineSelectHandler}>
+          <Dropdown.Toggle variant="outline-dark">{selectedMachine.name}</Dropdown.Toggle>
           <Dropdown.Menu>
-            <Dropdown.Item>CNC Machine</Dropdown.Item>
-            <Dropdown.Item>Milling Machine</Dropdown.Item>
+            {machines.map((mc, ind) => (
+              <Dropdown.Item eventKey={ind} key={ind + "di"}>{mc.name}</Dropdown.Item>
+            ))}
           </Dropdown.Menu>
         </Dropdown>
       </Card.Body>
@@ -47,18 +81,21 @@ const AlertContent = () => {
         <Col sm={3}>
           <Card>
             <Card.Body>
-              <Button variant='outline-dark' style={{ border: 0 }}>
+              <Button variant="outline-dark" style={{ border: 0 }}>
                 <Image src={BackTriangle} style={{ marginRight: 16 }} />
                 Back
               </Button>
             </Card.Body>
             <Card>
-              <Card.Body style={{ borderBottom: '1px solid #72757A' }}>
-                6 Alert <Badge pill bg='primary' style={{ marginLeft: 10 }}>2 New</Badge>
+              <Card.Body style={{ borderBottom: "1px solid #72757A" }}>
+                6 Alert{" "}
+                <Badge pill bg="primary" style={{ marginLeft: 10 }}>
+                  2 New
+                </Badge>
               </Card.Body>
               <Card.Body>
-                {alertDatas.map((ad, ind) => (
-                  <div onClick={() => setSelectedId(ad.id)} key={ind+'ai'}>
+                {alerts.map((ad, ind) => (
+                  <div onClick={() => setSelectedId(ad.id)} key={ind + "ai"}>
                     <AlertItem alertData={ad} selectedId={selectedId} />
                   </div>
                 ))}
@@ -71,7 +108,7 @@ const AlertContent = () => {
         </Col>
       </Row>
     </Card>
-  )
-}
+  );
+};
 
-export default AlertContent
+export default AlertContent;

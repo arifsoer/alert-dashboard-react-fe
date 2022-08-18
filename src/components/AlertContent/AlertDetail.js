@@ -9,7 +9,7 @@ const AlertDetail = ({alertData}) => {
     <Container fluid>
       <div className="py-4 d-flex flex-column justify-content-start align-items-start" style={{ borderBottom: '1px solid #dcddde' }}>
         <h3 className='mb-0 text-muted fw-normal'>ALERT ID {alertData.id}</h3>
-        <h5 className='text-muted fw-normal'>Detected at {moment.unix(alertData.detectionTime).format('YYYY-MM-DD HH:mm:ss')}</h5>
+        <h5 className='text-muted fw-normal'>Detected at {moment(alertData.detectionTime).format('YYYY-MM-DD HH:mm:ss')}</h5>
       </div>
       <Row className='my-3'>
         <Col>
@@ -40,7 +40,7 @@ const AlertDetail = ({alertData}) => {
       <Row>
         <Col sm={8}>
           <label className='mt-4 fw-bold fs-6'>Comment</label>
-          <textarea class="form-control" rows={6}></textarea>
+          <textarea className="form-control" rows={6}></textarea>
         </Col>
       </Row>
       <Row className='my-4'>

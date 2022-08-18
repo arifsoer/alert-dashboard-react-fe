@@ -1,4 +1,5 @@
 import { Card, Badge } from 'react-bootstrap'
+import moment from 'moment'
 
 const AlertItem = ({ alertData, selectedId }) => {
   const isSelected = selectedId === alertData.id
@@ -11,7 +12,7 @@ const AlertItem = ({ alertData, selectedId }) => {
           <Badge pill bg='warning' className='fs-5 fw-normal'>{alertData.anomaly}</Badge>
         </div>
         <h5 className='ms-3 fw-bolder'>{alertData.reason}</h5>
-        <h5 className='ms-3 fw-normal'>Detected at 2021-06-18 20:10:04</h5>
+        <h5 className='ms-3 fw-normal'>Detected at {moment(alertData.detectionTime).format('YYYY-MM-DD HH:mm:ss')}</h5>
         <h5 className='ms-3 text-primary fw-normal pt-3'>{alertData.machine}</h5>
       </Card.Body>
     </Card>
@@ -22,7 +23,7 @@ AlertItem.defaultProps = {
   alertData: {
     id: '#00013211',
     anomaly: 'Moderate',
-    detectionTime: 1628676001,
+    detectionTime: '2021-08-11T10:00:01.000Z',
     machine: 'CNC Machine',
     reason: 'Unknown Anomaly',
     isAlreadyOpen: false
