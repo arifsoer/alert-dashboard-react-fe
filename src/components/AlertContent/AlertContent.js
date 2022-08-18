@@ -41,12 +41,16 @@ const AlertContent = () => {
   useEffect(() => {getMachines()}, [])
 
   // get alerts data
-  const [selectedId, setSelectedId] = useState("#00013211");
+  const [selectedId, setSelectedId] = useState("");
+  const [selectedAlert, setSelectedAlert] = useState({})
   const [alerts, setAlerts] = useState([])
+  const [totalAlert, setTotalAlert] = useState(0)
+  const [unreadAlert, setUnreadAlert] = useState(0)
+  // get alert from server
   const getAlertsByMachine = async (machineId) => {
     try {
       const respAlerts = await axios.get(`/alert/anomalies/bymachine/${machineId}`)
-      setAlerts(respAlerts.data.map(dt => {
+      const mapedRespAlerts = respAlerts.data.map(dt => {
         return {
           id: dt.generatedId,
           anomaly: dt.name,
@@ -55,13 +59,28 @@ const AlertContent = () => {
           reason: dt.reason.name,
           isAlreadyOpen: dt.isAlreadyOpen,
         }
-      }))
+      })
+      setAlerts(mapedRespAlerts)
+      setTotalAlert(mapedRespAlerts.length)
+      setUnreadAlert(mapedRespAlerts.filter(a => !a.isAlreadyOpen).length)
+
+      // handle selected
+      if(selectedId === '') {
+        setSelectedId(mapedRespAlerts[0].id)
+      }
+      if(Object.keys(selectedAlert).length === 0) {
+        setSelectedAlert(mapedRespAlerts[0])
+      }
     } catch (error) {
       alert(error)
     }
   }
-
-  const selectedAlert = alerts.find((ad) => ad.id === selectedId);
+  // Alert Item Click Handler
+  const alertClickHandler = (id) => {
+    setSelectedId(alerts[id].id)
+    console.log("selected :", alerts[id])
+    setSelectedAlert(alerts[id])
+  }
 
   return (
     <Card>
@@ -88,14 +107,14 @@ const AlertContent = () => {
             </Card.Body>
             <Card>
               <Card.Body style={{ borderBottom: "1px solid #72757A" }}>
-                6 Alert{" "}
+                {totalAlert} Alert{" "}
                 <Badge pill bg="primary" style={{ marginLeft: 10 }}>
-                  2 New
+                  {unreadAlert} New
                 </Badge>
               </Card.Body>
               <Card.Body>
                 {alerts.map((ad, ind) => (
-                  <div onClick={() => setSelectedId(ad.id)} key={ind + "ai"}>
+                  <div onClick={() => alertClickHandler(ind)} key={ind + "ai"}>
                     <AlertItem alertData={ad} selectedId={selectedId} />
                   </div>
                 ))}

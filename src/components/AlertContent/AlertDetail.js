@@ -1,10 +1,12 @@
-import { Button, Col, Container, Form, Row } from "react-bootstrap"
+import { Button, Col, Container, Form, Row, Image } from "react-bootstrap"
 import ReactAudioPlayer from 'react-audio-player';
 import moment from 'moment'
 
 import Wav1 from '../../assets/wavs/1.wav'
+import WaveForm from '../../assets/svgs/waveform.svg'
+import Spectogram from '../../assets/svgs/spectogram.svg'
 
-const AlertDetail = ({alertData}) => {  
+const AlertDetail = ({alertData}) => {
   return (
     <Container fluid>
       <div className="py-4 d-flex flex-column justify-content-start align-items-start" style={{ borderBottom: '1px solid #dcddde' }}>
@@ -15,10 +17,14 @@ const AlertDetail = ({alertData}) => {
         <Col>
           <h4 className='text-muted fw-normal'>Anomaly Machine Output</h4>
           <ReactAudioPlayer controls src={Wav1} />
+          <Image className="my-4" src={WaveForm}></Image>
+          <Image src={Spectogram}></Image>
         </Col>
         <Col>
           <h4 className='text-muted fw-normal'>Normal Machine Output</h4>
           <ReactAudioPlayer controls src={Wav1} />
+          <Image className="my-4" src={WaveForm}></Image>
+          <Image src={Spectogram}></Image>
         </Col>
       </Row>
       <Row>
