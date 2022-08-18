@@ -1,7 +1,9 @@
 import axios from "axios";
 
+import {API_URL} from '../utils'
+
 const axiosInstance = axios.create({
-  baseURL: 'http://localhost:3001/api/v1',
+  baseURL: `${API_URL}/api/v1`,
 });
 
 axiosInstance.interceptors.response.use(
