@@ -56,8 +56,11 @@ const AlertContent = () => {
           anomaly: dt.name,
           detectionTime: dt.detectedAt,
           machine: dt.machine.name,
+          machineId: dt.machine.id,
           reason: dt.reason.name,
           isAlreadyOpen: dt.isAlreadyOpen,
+          soundClip: dt.soundClip,
+          idData: dt.id
         }
       })
       setAlerts(mapedRespAlerts)
@@ -76,10 +79,18 @@ const AlertContent = () => {
     }
   }
   // Alert Item Click Handler
-  const alertClickHandler = (id) => {
-    setSelectedId(alerts[id].id)
-    console.log("selected :", alerts[id])
-    setSelectedAlert(alerts[id])
+  const alertClickHandler = async (ind) => {
+    setSelectedId(alerts[ind].id)
+    setSelectedAlert(alerts[ind])
+    
+    try {
+      if (!alerts[ind].isAlreadyOpen) {
+        await axios.patch(`/alert/anomalies/updateread/${alerts[ind].idData}`)
+        getAlertsByMachine(selectedMachine.id)
+      }
+    } catch (error) {
+      alert(error)
+    }
   }
 
   return (
@@ -108,9 +119,9 @@ const AlertContent = () => {
             <Card>
               <Card.Body style={{ borderBottom: "1px solid #72757A" }}>
                 {totalAlert} Alert{" "}
-                <Badge pill bg="primary" style={{ marginLeft: 10 }}>
+                {unreadAlert === 0 ? null : <Badge pill bg="primary" style={{ marginLeft: 10 }}>
                   {unreadAlert} New
-                </Badge>
+                </Badge>}
               </Card.Body>
               <Card.Body>
                 {alerts.map((ad, ind) => (
@@ -123,7 +134,7 @@ const AlertContent = () => {
           </Card>
         </Col>
         <Col sm={9}>
-          <AlertDetail selectedAlert={selectedAlert} />
+          <AlertDetail alertData={selectedAlert} machineData={selectedMachine} />
         </Col>
       </Row>
     </Card>
