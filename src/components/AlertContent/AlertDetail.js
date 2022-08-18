@@ -50,9 +50,6 @@ const AlertDetail = ({ alertData, machineData }) => {
       alert(error);
     }
   };
-  useEffect(() => {
-    getActions();
-  }, []);
 
   // get Action
   const [actions, setActions] = useState([]);
@@ -64,10 +61,15 @@ const AlertDetail = ({ alertData, machineData }) => {
       alert(error);
     }
   };
+  useEffect(() => {
+    getActions();
+  }, []);
+
   // get Reason
   const [reasons, setReasons] = useState([]);
   const getReasons = async () => {
     try {
+      console.log(alertData)
       if (alertData.machineId) {
         const resp = await axios.get(
           `/alert/reasons/bymachine/${alertData.machineId}`
