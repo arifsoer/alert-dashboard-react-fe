@@ -32,6 +32,7 @@ const AlertContent = () => {
       setSelectedId("")
       setSelectedAlert({})
       getAlertsByMachine(resp.data[0].id)
+      getReasons(resp.data[0].id)
     } catch (error) {
       alert(error);
     }
@@ -80,6 +81,7 @@ const AlertContent = () => {
       alert(error)
     }
   }
+  
   // Alert Item Click Handler
   const alertClickHandler = async (ind) => {
     setSelectedId(alerts[ind].id)
@@ -94,6 +96,22 @@ const AlertContent = () => {
       alert(error)
     }
   }
+
+  // get Reason
+  const [reasons, setReasons] = useState([]);
+  const getReasons = async (machineId) => {
+    try {
+      const resp = await axios.get(
+        `/alert/reasons/bymachine/${machineId}`
+      );
+      setReasons(resp.data);
+    } catch (error) {
+      alert(error);
+    }
+  };
+  // useEffect(() => {
+  //   getReasons();
+  // }, []);
 
   return (
     <Card>
@@ -136,7 +154,7 @@ const AlertContent = () => {
           </Card>
         </Col>
         <Col sm={9}>
-          <AlertDetail alertData={selectedAlert} machineData={selectedMachine} />
+          <AlertDetail alertData={selectedAlert} machineData={selectedMachine} reasons={reasons} />
         </Col>
       </Row>
     </Card>

@@ -10,7 +10,7 @@ import { API_URL } from "../../utils";
 import WaveForm from "../../assets/svgs/waveform.svg";
 import Spectogram from "../../assets/svgs/spectogram.svg";
 
-const AlertDetail = ({ alertData, machineData }) => {
+const AlertDetail = ({ alertData, machineData, reasons }) => {
   const urlAnomalyWav = `${API_URL}/be-static/${alertData.soundClip}`;
   const urlNormalWav = `${API_URL}/be-static/${machineData.normalSound}`;
 
@@ -63,25 +63,6 @@ const AlertDetail = ({ alertData, machineData }) => {
   };
   useEffect(() => {
     getActions();
-  }, []);
-
-  // get Reason
-  const [reasons, setReasons] = useState([]);
-  const getReasons = async () => {
-    try {
-      console.log(alertData)
-      if (alertData.machineId) {
-        const resp = await axios.get(
-          `/alert/reasons/bymachine/${alertData.machineId}`
-        );
-        setReasons(resp.data);
-      }
-    } catch (error) {
-      alert(error);
-    }
-  };
-  useEffect(() => {
-    getReasons();
   }, []);
 
   return (
